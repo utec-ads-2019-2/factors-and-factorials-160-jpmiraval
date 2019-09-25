@@ -1,77 +1,54 @@
 #include <iostream>
-#include <string>
 #include <map>
+#include <cmath>
 #include <iomanip>
 
 using namespace std;
 
-map<int, int> mapa;
+map<int,int> factoresPrimos;
+int num;
 
-bool esprimo(int n){
-    for(int i = 2; i < n; i++){
-        if(n%i == 0 && n != i){
-            return false;
+void primeFactors(int n){
+    while (n % 2 == 0)
+    {
+        factoresPrimos[2]++;
+        n = n/2;
+    }
+
+
+    for (int i = 3; i <= sqrt(n); i = i + 2)
+    {
+        while (n % i == 0)
+        {
+            factoresPrimos[i]++;
+            n = n/i;
         }
     }
-    return true;
+
+    if (n > 2)
+        factoresPrimos[n]++;
 }
-
-void factory(int num){
-    for(int i = 2; i <= num; i ++){
-
-        if(esprimo(i)){
-            mapa[i]++;
-        }else{
-
-            auto temp = i;
-            for(int k = 2; k <= temp; k++){
-
-                if(k ==1)
-                    break;
-
-
-
-                if(esprimo(k)){
-                    while(temp%k == 0 && k!=1){
-                        temp = temp / k;
-                        mapa[k]++;
-                    }
-                }
-
-            }
-
-        }
-
-
-
-    }
-}
-
-
 
 int main() {
-    string numero;
-    int num;
 
-    while(cin >> numero){
-        if(numero == "O")
-            break;
+    while(cin>>num, num!=0){
 
-        num = stoi(numero);
-        factory(num);
-
-        cout << setw(3) << num << "!";
-        cout << setw(3) << "=";
-
-
-    for(auto c : mapa){
-        cout << setw(3) << c.second;
+        cout<<setw(3)<<num<<"! =";
+        while(num != 1){
+            primeFactors(num);
+            num--;
+        }
+        int contador = 0;
+        for(auto it= factoresPrimos.begin();it != factoresPrimos.end()--; it++){
+            if(contador == 15) {
+                cout<<endl<<"      ";
+                contador = 0;
+            }
+            cout<<setw(3)<<it->second;
+            contador++;
+        }
+        cout<<endl;
+        factoresPrimos.clear();
     }
-
-    cout << endl;
-
-    mapa.clear();
-    }
-
     return 0;
 }
